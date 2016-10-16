@@ -39,7 +39,11 @@ $(function() {
 
   $.getJSON( "assets/reviews.json", function( data ) {
     var reviews = [];
+
+    // Sorting reviews by created date
     data.sort(date_sort);
+
+    //
 
     // collecting data about each review
     $.each( data, function( key, val ) {
