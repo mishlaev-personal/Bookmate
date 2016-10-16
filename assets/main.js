@@ -23,34 +23,43 @@ $(function() {
           the day and month.
           Note:  Use YYMMDD, for sorting that makes sense.
       */
-      year    = (""  + year) .slice (-2);
+      year    = (""  + year) .slice (-4);
       month   = ("0" + month).slice (-2);
       day     = ("0" + day)  .slice (-2);
 
-      return day + '/' + month + '/' + year;
+      return day + ' / ' + month + ' / ' + year;
   };
 
 //Sorting func
-  function custom_sort(a, b) {
+  function date_sort(a, b) {
       return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
   }
 
 // Showimg reviews
 
   $.getJSON( "assets/reviews.json", function( data ) {
-    console.log(data);
     var reviews = [];
+    data.sort(date_sort);
 
-    console.log(data.sort(custom_sort));
-
+    // collecting data about each review
     $.each( data, function( key, val ) {
-      reviews.push( "<li id='" + key + "'>" + unixEpochTime_TO_Date_DDMMYY(val.created_at, " Local") + ' ' +  val.content + "</li>" );
+      var element = $('<div>', {
+          'class': 'card card-block',
+        })
+        .append($('<small>', {
+          'class': 'text-muted',
+          text: 'Процитированно: ' + unixEpochTime_TO_Date_DDMMYY(val.created_at, " Local")
+        }))
+        .append($('<p>', {
+          'class': 'card-text',
+          text: val.content
+        }));
+
+      reviews.push( element );
     });
 
-    $( "<ol/>", {
-      "class": "my-new-list",
-      html: reviews.join( "" )
-    }).appendTo( "body" );
+
+    $('#reviews').append(reviews);
   });
 
 
